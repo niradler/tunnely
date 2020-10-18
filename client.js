@@ -1,10 +1,15 @@
 require("dotenv").config();
 const io = require("socket.io-client");
 const request = require("request");
+const yargs = require("yargs/yargs");
+const { hideBin } = require("yargs/helpers");
 
-const remoteUrl = "http://localhost:3000";
-const localUrl = "http://localhost:3000";
+const remoteUrl = process.env.REMOTE_SERVER;
+let localUrl = process.env.LOCAL_SERVER;
 const ioClient = io.connect(remoteUrl);
+
+const argv = yargs(hideBin(process.argv)).argv;
+if (argv.local) localUrl = argv.local;
 
 ioClient.on("request", (msg) => {
   console.info(msg);
