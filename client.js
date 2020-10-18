@@ -13,7 +13,18 @@ const ioClient = io.connect(remoteUrl, {
 const argv = yargs(hideBin(process.argv)).argv;
 if (argv.local) localUrl = argv.local;
 
-console.log(`linking: ${localUrl} <=> ${remoteUrl}`);
+ioClient.on("connect", function () {
+  if (ioClient.connected) {
+    console.log(`id: ${ioClient.id}`);
+    console.log(
+      `connected: ${localUrl} <=> ${remoteUrl}/proxy/${ioClient.id}/`
+    );
+  } else console.log("please try again.");
+});
+
+ioClient.on("disconnect", function () {
+  console.log("disconnected.");
+});
 
 ioClient.on("request", (msg) => {
   console.info(msg);
