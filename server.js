@@ -55,7 +55,7 @@ app.all("/proxy/:id", proxy);
 app.all("/test", (req, res) => res.json({ path: req.path, body: req.body }));
 
 io.on("connection", (socket) => {
-  console.log(`a user connected, id: ${socket.id}`);
+  console.log(`connected, id: ${socket.id}, ip: ${socket.conn.remoteAddress}`);
 
   if (!clients[socket.id]) {
     clients[socket.id] = socket;
@@ -70,6 +70,7 @@ io.on("connection", (socket) => {
   });
 });
 
+const port = process.env.PORT || 3000;
 http.listen(3000, () => {
-  console.log("listening on *:3000");
+  console.log("listening on localhost:" + port);
 });

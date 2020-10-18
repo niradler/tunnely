@@ -10,7 +10,7 @@ const ioClient = io.connect(remoteUrl);
 
 const argv = yargs(hideBin(process.argv)).argv;
 if (argv.local) localUrl = argv.local;
-
+console.log(`linking: ${localUrl} <=> ${remoteUrl}`)
 ioClient.on("request", (msg) => {
   console.info(msg);
   const data = JSON.parse(msg);
