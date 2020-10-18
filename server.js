@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
@@ -53,6 +54,16 @@ app.use(rawBody);
 app.all("/proxy/:id/*", proxy);
 app.all("/proxy/:id", proxy);
 app.all("/test", (req, res) => res.json({ path: req.path, body: req.body }));
+
+io.use(function (socket, next) {
+  if (socket.handshake.query && socket.handshake.query.token) {
+    if (socket.handshake.query.token === process.env.APP_KEY) {
+      next();
+    }
+  } else {
+    next(new Error("Authentication error"));
+  }
+});
 
 io.on("connection", (socket) => {
   console.log(`connected, id: ${socket.id}, ip: ${socket.conn.remoteAddress}`);

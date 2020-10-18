@@ -6,11 +6,15 @@ const { hideBin } = require("yargs/helpers");
 
 const remoteUrl = process.env.REMOTE_SERVER;
 let localUrl = process.env.LOCAL_SERVER;
-const ioClient = io.connect(remoteUrl);
+const ioClient = io.connect(remoteUrl, {
+  query: { token: process.env.APP_KEY },
+});
 
 const argv = yargs(hideBin(process.argv)).argv;
 if (argv.local) localUrl = argv.local;
-console.log(`linking: ${localUrl} <=> ${remoteUrl}`)
+
+console.log(`linking: ${localUrl} <=> ${remoteUrl}`);
+
 ioClient.on("request", (msg) => {
   console.info(msg);
   const data = JSON.parse(msg);

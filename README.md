@@ -8,6 +8,8 @@ deploy to the cloud, and run node server.js
 
 to expose local server run the client.js with --local flag.
 
+make sure to check the .env file.
+
 ## usage
 
 ```sh
