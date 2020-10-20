@@ -81,7 +81,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const port = process.env.PORT || 3000;
-http.listen(3000, () => {
+const port = process.env.PORT || 8081;
+http.listen(port, () => {
   console.log("listening on localhost:" + port);
 });
