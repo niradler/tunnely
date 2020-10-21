@@ -19,20 +19,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Setup gcloud CLI
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: "290.0.1"
           service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           project_id: ${{ secrets.RUN_PROJECT }}
 
-      # Build and push image to Google Container Registry
       - name: Build
         run: |-
           gcloud builds submit \
             --quiet \
             --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:latest"
-      # Deploy image to Cloud Run
+
       - name: Deploy
         run: |-
           gcloud run deploy "$SERVICE_NAME" \
