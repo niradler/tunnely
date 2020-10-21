@@ -4,14 +4,16 @@ const request = require("request");
 const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
 
-const remoteUrl = process.env.REMOTE_SERVER;
+let remoteUrl = process.env.REMOTE_SERVER;
 let localUrl = process.env.LOCAL_SERVER;
-const ioClient = io.connect(remoteUrl, {
-  query: { token: process.env.APP_KEY },
-});
 
 const argv = yargs(hideBin(process.argv)).argv;
 if (argv.local) localUrl = argv.local;
+if (argv.remote) remoteUrl = argv.remote;
+
+const ioClient = io.connect(remoteUrl, {
+  query: { token: process.env.APP_KEY },
+});
 
 ioClient.on("connect", function () {
   if (ioClient.connected) {
@@ -41,11 +43,17 @@ ioClient.on("request", (msg) => {
       if (error) {
         console.error(error);
       }
-
-      ioClient.emit(
-        "request",
-        JSON.stringify({ statusCode: response.statusCode, body })
-      );
+      if (!response && error) {
+        ioClient.emit(
+          "request",
+          JSON.stringify({ statusCode: 500, body: { error: error.message } })
+        );
+      } else {
+        ioClient.emit(
+          "request",
+          JSON.stringify({ statusCode: response.statusCode, body })
+        );
+      }
     }
   );
 });
