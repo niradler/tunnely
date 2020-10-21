@@ -16,3 +16,9 @@ make sure to check the .env file.
 node client.js --local=http://localhost:3000
 node client.js --local=http://localhost:3000 --remote=https://remote-server-url
 ```
+
+### TODO
+
+- persist data
+- add cache
+  
